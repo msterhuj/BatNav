@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include "../core/user/user.h"
 
 void run_server(int port) {
     int socket_fd;
