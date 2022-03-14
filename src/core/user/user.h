@@ -4,5 +4,6 @@
 #include "user.c"
 #include "loader.c"
 #include "manage.c"
+#include "security.c"
 
 #endif //BATNAV_USER_H

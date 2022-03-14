@@ -31,7 +31,8 @@ void run_client(char *host, int port) {
     char buffer[1024];
     while (1) {
         printf("Client: \t");
-        scanf("%s", &buffer[0]);
+        fgets(buffer, 1024, stdin);
+        strtok(buffer, "\n");
         send(socket_client_fd, buffer, strlen(buffer), 0);
 
         if (strcmp(buffer, ":exit") == 0) {
@@ -39,8 +40,9 @@ void run_client(char *host, int port) {
             printf("Disconnected from server.\n");
             exit(1);
         }
+        bzero(buffer, sizeof(buffer));
 
         if (recv(socket_client_fd, buffer, 1024, 0) < 0) printf("Error in receiving data.\n");
-        else printf("Server: \t%s\n", buffer);
+        else printf("Server: %s\n", buffer);
     }
 }

@@ -3,11 +3,17 @@
 #include <string.h>
 #include "user.h"
 
+
 FILE * open_user_file(char * mode) {
     FILE * file = fopen("users.bn", mode);
     if (file == NULL) {
-        printf("Error opening file users.bn\n");
-        exit(1);
+        file = fopen("users.bn", "w");
+        if (file == NULL) {
+            printf("Error: can't open file users.bn\n");
+            exit(1);
+        }
+        fclose(file);
+        return open_user_file(mode);
     }
     return file;
 }
@@ -38,7 +44,7 @@ void user_init() {
     }
 
     int i = 0;
-    while (fscanf(fp, "%c:%c:%d", &user_list[i].name, &user_list[i].pass, &user_list[i].is_admin) != EOF) {
+    while (fscanf(fp, "%c:%c", user_list[i].name, user_list[i].pass) != EOF) {
         i++;
     }
     fclose(fp);
@@ -56,7 +62,7 @@ void user_save() {
     }
 
     for (int i = 0; i < user_list_size(); i++) {
-        fprintf(fp, "%c:%c:%d\n", user_list[i].name, user_list[i].pass, user_list[i].is_admin);
+        fprintf(fp, "%s:%s\n", user_list[i].name, user_list[i].pass);
     }
     fclose(fp);
 }
