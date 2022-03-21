@@ -3,15 +3,23 @@
 #include <string.h>
 #include "user.h"
 
+#define USER_FILE_NAME "user.dat"
 
+/**
+ * @brief Return file pointer of user.dat or create new file
+ *        if not exist with default admin user
+ * @param mode
+ * @return FILE *
+ */
 FILE * open_user_file(char * mode) {
-    FILE * file = fopen("users.bn", mode);
+    FILE * file = fopen(USER_FILE_NAME, mode);
     if (file == NULL) {
-        file = fopen("users.bn", "w");
+        file = fopen(USER_FILE_NAME, "w");
         if (file == NULL) {
             printf("Error: can't open file users.bn\n");
             exit(1);
         }
+        fprintf(file, "admin:admin\n");
         fclose(file);
         return open_user_file(mode);
     }
@@ -25,6 +33,7 @@ void user_init() {
         printf("Error opening file!\n");
         return;
     }
+
 
     int n = 0;
     char c;
@@ -49,6 +58,7 @@ void user_init() {
     }
     fclose(fp);
 }
+
 int user_list_size() {
     return sizeof(*user_list) / sizeof(user_t);
 }
