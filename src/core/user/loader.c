@@ -26,42 +26,59 @@ FILE * open_user_file(char * mode) {
     return file;
 }
 
-// open file and read all users
-void user_init() {
-    FILE * fp = open_user_file("r");
-    if (fp == NULL) {
-        printf("Error opening file!\n");
-        return;
+/**
+ * @brief get number of users in file
+ * @return int
+ */
+int get_user_count_in_file() {
+    FILE * file = open_user_file("r");
+    int count = 0;
+    char line[256];
+    while (fgets(line, sizeof(line), file) != NULL) {
+        count++;
     }
-
-
-    int n = 0;
-    char c;
-    while ((c = fgetc(fp)) != EOF) {
-        if (c == '\n') {
-            n++;
-        }
-    }
-    fclose(fp);
-
-    user_list = malloc(sizeof(user_t) * n);
-
-    fp = open_user_file("r");
-    if (fp == NULL) {
-        printf("Error opening file!\n");
-        return;
-    }
-
-    int i = 0;
-    while (fscanf(fp, "%c:%c", user_list[i].name, user_list[i].pass) != EOF) {
-        i++;
-    }
-    fclose(fp);
+    fclose(file);
+    return count;
 }
-
+/**
+ * @brief Get number of user loaded in memory
+ * @return
+ */
 int user_list_size() {
     return sizeof(*user_list) / sizeof(user_t);
 }
+
+/**
+ * @brief Load all users from file and allocate memory for them
+ */
+void user_init() {
+    int max_user = get_user_count_in_file();
+    user_list = malloc(sizeof(user_t) * max_user);
+    if (user_list == NULL) {
+        printf("Error: can't allocate memory for users\n");
+        exit(1);
+    }
+
+    FILE * file = open_user_file("r");
+    char line[256];
+    int i = 0;
+    while (fgets(line, sizeof(line), file) != NULL) {
+        char * pch = strtok(line, "\n");
+        pch = strtok(pch, ":");
+
+        user_list[i].name = malloc(strlen(pch) + 1);
+        strcpy(user_list[i].name, pch);
+        pch = strtok(NULL, ":");
+        user_list[i].pass = malloc(strlen(pch) + 1);
+        strcpy(user_list[i].pass, pch);
+        printf("%s:%s\n", user_list[i].name, user_list[i].pass);
+        i++;
+    }
+    fclose(file);
+    printf("%d users loaded\n", i);
+}
+
+
 
 // save all users to file
 void user_save() {

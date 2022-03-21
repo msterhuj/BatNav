@@ -30,7 +30,7 @@ void handle_client_connection() {
         if (strcmp(buffer, ":exit") == 0) {
             printf("Disconnected from %s:%d\n", inet_ntoa(newAddr.sin_addr), ntohs(newAddr.sin_port));
             close(socket_client_fd);
-            exit(0);
+            exit(0); // TODO: BREAK
         } else {
             char * prompt = ">>>";
             handle_command(buffer);
