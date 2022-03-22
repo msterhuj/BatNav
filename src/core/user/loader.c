@@ -40,20 +40,13 @@ int get_user_count_in_file() {
     fclose(file);
     return count;
 }
-/**
- * @brief Get number of user loaded in memory
- * @return
- */
-int user_list_size() {
-    return sizeof(*user_list) / sizeof(user_t);
-}
 
 /**
  * @brief Load all users from file and allocate memory for them
  */
-void user_init() {
-    int max_user = get_user_count_in_file();
-    user_list = malloc(sizeof(user_t) * max_user);
+void setup_users() {
+    user_list_size = get_user_count_in_file();
+    user_list = malloc(sizeof(user_t) * user_list_size);
     if (user_list == NULL) {
         printf("Error: can't allocate memory for users\n");
         exit(1);
@@ -65,13 +58,11 @@ void user_init() {
     while (fgets(line, sizeof(line), file) != NULL) {
         char * pch = strtok(line, "\n");
         pch = strtok(pch, ":");
-
         user_list[i].name = malloc(strlen(pch) + 1);
         strcpy(user_list[i].name, pch);
         pch = strtok(NULL, ":");
         user_list[i].pass = malloc(strlen(pch) + 1);
         strcpy(user_list[i].pass, pch);
-        printf("%s:%s\n", user_list[i].name, user_list[i].pass);
         i++;
     }
     fclose(file);
@@ -79,24 +70,22 @@ void user_init() {
 }
 
 
-
 // save all users to file
-void user_save() {
+void save_users() {
     FILE * fp = open_user_file("w");
     if (fp == NULL) {
         printf("Error opening file!\n");
         return;
     }
 
-    for (int i = 0; i < user_list_size(); i++) {
+    for (int i = 0; i < user_list_size; i++) {
+        printf("saving -> %s:%s\n", user_list[i].name, user_list[i].pass);
         fprintf(fp, "%s:%s\n", user_list[i].name, user_list[i].pass);
     }
     fclose(fp);
 }
 
 void user_reload() {
-    user_save();
-    free(user_list);
-    user_list = NULL;
-    user_init();
+    free_user_list();
+    setup_users();
 }

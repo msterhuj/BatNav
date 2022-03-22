@@ -35,24 +35,6 @@ int main(int argc, char *argv[]) {
     } else print_parameters_help();
 
     // always run
-    user_init();
-    int size = 0;
-
-    while (user_list[size].name != NULL) {
-        if (user_list[size].name == NULL) {
-            break;
-        }
-        //printf("%s\n", user_list[size].name);
-        printf("%d", size);
-        size++;
-    }
-    //printf("%d\n", size);
-    //int beteu = sizeof (user_list[0]) / sizeof (user_list);
-    //printf("%d\n", beteu);
-
-
-    // print all user of user_list
-
     // end
 
     return 0;

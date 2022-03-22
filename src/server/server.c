@@ -10,7 +10,7 @@
 
 void run_server(int port) {
 
-    user_init();
+    setup_users();
 
     init_socket();
     bind_socket(port);
