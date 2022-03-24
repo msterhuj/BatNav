@@ -5,6 +5,7 @@
 
 #include "server/server.h"
 #include "client/client.h"
+#include "core/grid.h"
 
 void print_parameters_help();
 
