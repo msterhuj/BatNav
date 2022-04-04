@@ -33,7 +33,7 @@ void handle_client_connection() {
             exit(0); // TODO: BREAK
         } else {
             char * prompt = ">>>";
-            handle_command(buffer);
+            handle_command(buffer,socket_client_fd);
             send(socket_client_fd, prompt, strlen(prompt), 0);
             bzero(buffer, sizeof(buffer));
         }
